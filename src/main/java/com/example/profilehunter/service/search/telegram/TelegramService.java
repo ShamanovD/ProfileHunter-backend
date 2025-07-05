@@ -1,13 +1,11 @@
 package com.example.profilehunter.service.search.telegram;
 
 import com.example.profilehunter.model.common.SourceType;
-import com.example.profilehunter.model.dto.UserFullInfo;
-import com.example.profilehunter.model.dto.UserInfo;
-import com.example.profilehunter.model.mapper.telegram.TelegramInfoMapper;
+import com.example.profilehunter.model.dto.TelegramInfoWrapper;
+import com.example.profilehunter.model.mapper.UserMapperFactory;
 import com.example.profilehunter.service.search.BaseSearchService;
 import dev.voroby.springframework.telegram.client.TelegramClient;
 import dev.voroby.springframework.telegram.client.templates.response.Response;
-import lombok.RequiredArgsConstructor;
 import org.drinkless.tdlib.TdApi;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +14,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 @Service
-@RequiredArgsConstructor
-public class TelegramService extends BaseSearchService<TdApi.User, TdApi.User> {
+public class TelegramService extends BaseSearchService<TdApi.User, TelegramInfoWrapper> {
 
     private final TelegramClient client;
 
-    private final TelegramInfoMapper mapper;
+    public TelegramService(UserMapperFactory mapperFactory, TelegramClient client) {
+        super(mapperFactory);
+        this.client = client;
+    }
 
     @Override
     public Function<String, Optional<TdApi.User>> searchUser() {
@@ -37,8 +37,24 @@ public class TelegramService extends BaseSearchService<TdApi.User, TdApi.User> {
     }
 
     @Override
-    public Function<String, Optional<TdApi.User>> searchUserFullInfo() {
-        return searchUser();
+    public Function<String, Optional<TelegramInfoWrapper>> searchUserFullInfo() {
+        return item -> {
+            TelegramInfoWrapper wrapper = new TelegramInfoWrapper();
+
+            Optional<Long> id = getUserIdByUserName(item);
+
+            if (id.isPresent()) {
+                getUserById(id.get()).ifPresent(wrapper::setUser);
+
+                Optional<TdApi.ChatPhotos> chatPhotos = client.send(
+                        new TdApi.GetUserProfilePhotos(id.get(), 0, 5))
+                        .getObject();
+
+                chatPhotos.ifPresent(wrapper::setPhotos);// TODO: 05.07.2025 add AWS support for photos, maybe in future split to another microservice
+            }
+
+            return Optional.of(wrapper);
+        };
     }
 
     @Override
@@ -57,17 +73,7 @@ public class TelegramService extends BaseSearchService<TdApi.User, TdApi.User> {
     }
 
     @Override
-    public Function<TdApi.User, UserInfo> mapUser() {
-        return mapper::mapUser;
-    }
-
-    @Override
-    public Function<TdApi.User, UserFullInfo> mapUserWithFullInfo() {
-        return mapper::mapUserWithFullInfo;
-    }
-
-    @Override
-    public SourceType getSearchType() {
+    public SourceType getSourceType() {
         return SourceType.TELEGRAM;
     }
 
@@ -94,7 +100,4 @@ public class TelegramService extends BaseSearchService<TdApi.User, TdApi.User> {
         return client.send(new TdApi.GetUser(id)).getObject();
     }
 
-    private Optional<TdApi.UserFullInfo> getUserFullInfoById(Long id) {
-        return client.send(new TdApi.GetUserFullInfo(id)).getObject();
-    }
 }

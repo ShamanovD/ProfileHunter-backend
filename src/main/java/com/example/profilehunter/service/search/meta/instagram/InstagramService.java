@@ -1,12 +1,9 @@
 package com.example.profilehunter.service.search.meta.instagram;
 
 import com.example.profilehunter.model.common.SourceType;
-import com.example.profilehunter.model.dto.UserFullInfo;
-import com.example.profilehunter.model.dto.UserInfo;
+import com.example.profilehunter.model.mapper.UserMapperFactory;
 import com.example.profilehunter.model.mapper.instagram.InstagramAttribute;
-import com.example.profilehunter.model.mapper.instagram.InstagramInfoMapper;
 import com.example.profilehunter.service.search.BaseSearchService;
-import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,14 +16,17 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @Service
-@RequiredArgsConstructor
 public class InstagramService extends BaseSearchService<Map<InstagramAttribute, String>, Map<InstagramAttribute, String>> {
 
     private final RestClient restClient;
-    private final InstagramInfoMapper instagramInfoMapper;
 
     @Value("${spring.instagram.link}")
     private String instagramLink;
+
+    public InstagramService(RestClient restClient, UserMapperFactory mapperFactory) {
+        super(mapperFactory);
+        this.restClient = restClient;
+    }
 
     @Override
     public Function<String, Optional<Map<InstagramAttribute, String>>> searchUser() {
@@ -73,17 +73,7 @@ public class InstagramService extends BaseSearchService<Map<InstagramAttribute, 
     }
 
     @Override
-    public Function<Map<InstagramAttribute, String>, UserInfo> mapUser() {
-        return instagramInfoMapper::mapUser;
-    }
-
-    @Override
-    public Function<Map<InstagramAttribute, String>, UserFullInfo> mapUserWithFullInfo() {
-        return instagramInfoMapper::mapUserWithFullInfo;
-    }
-
-    @Override
-    public SourceType getSearchType() {
+    public SourceType getSourceType() {
         return SourceType.INSTAGRAM;
     }
 }
