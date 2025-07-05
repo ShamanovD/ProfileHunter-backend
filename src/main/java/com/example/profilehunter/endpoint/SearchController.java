@@ -6,7 +6,6 @@ import com.example.profilehunter.model.dto.UserInfo;
 import com.example.profilehunter.model.filter.LinkedUsersFilter;
 import com.example.profilehunter.service.search.ISearchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

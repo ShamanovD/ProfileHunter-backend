@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.MappingTarget;
 
-public abstract class BaseUserMapper<T, R> implements IUserMapper<T, R> {
+public abstract class BaseUserInfoMapper<T, R> implements IUserFullInfoMapper<T, R> {
 
     @AfterMapping
     protected void generateUrlByUsername(@MappingTarget UserInfo userInfo) {

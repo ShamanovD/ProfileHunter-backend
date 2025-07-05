@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/telegram/config")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200", methods = { RequestMethod.GET, RequestMethod.POST }) // <-- ДОБАВЬ ЭТУ АННОТАЦИЮ
+@CrossOrigin(origins = "http://localhost:4200", methods = { RequestMethod.GET, RequestMethod.POST })
 public class TelegramConfigurationController {
 
     private final ITelegramConfigService telegramConfigService;
 
     @PostMapping("/authCode")
-    public void checkAuthCode(String authCode) {
+    public void checkAuthCode(@RequestParam String authCode) {
         telegramConfigService.checkAuthCode(authCode);
     }
 

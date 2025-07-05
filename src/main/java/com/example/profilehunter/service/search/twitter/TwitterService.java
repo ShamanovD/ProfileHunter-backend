@@ -1,16 +1,13 @@
 package com.example.profilehunter.service.search.twitter;
 
 import com.example.profilehunter.model.common.SourceType;
-import com.example.profilehunter.model.dto.UserFullInfo;
-import com.example.profilehunter.model.dto.UserInfo;
-import com.example.profilehunter.model.mapper.twitter.TwitterInfoMapper;
+import com.example.profilehunter.model.mapper.UserMapperFactory;
 import com.example.profilehunter.service.search.BaseSearchService;
 import com.twitter.clientlib.ApiException;
 import com.twitter.clientlib.api.TwitterApi;
 import com.twitter.clientlib.model.Get2UsersByResponse;
 import com.twitter.clientlib.model.Get2UsersByUsernameUsernameResponse;
 import com.twitter.clientlib.model.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,11 +17,14 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Service
-@RequiredArgsConstructor
 public class TwitterService extends BaseSearchService<User, User> {
 
     private final TwitterApi twitterApi;
-    private final TwitterInfoMapper twitterInfoMapper;
+
+    public TwitterService(TwitterApi twitterApi, UserMapperFactory mapperFactory) {
+        super(mapperFactory);
+        this.twitterApi = twitterApi;
+    }
 
     @Override
     public Function<String, Optional<User>> searchUser() {
@@ -65,17 +65,7 @@ public class TwitterService extends BaseSearchService<User, User> {
     }
 
     @Override
-    public Function<User, UserInfo> mapUser() {
-        return twitterInfoMapper::mapUser;
-    }
-
-    @Override
-    public Function<User, UserFullInfo> mapUserWithFullInfo() {
-        return twitterInfoMapper::mapUserWithFullInfo;
-    }
-
-    @Override
-    public SourceType getSearchType() {
-        return SourceType.TWITTER;
+    public SourceType getSourceType() {
+        return SourceType.X;
     }
 }

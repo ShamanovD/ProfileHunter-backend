@@ -36,7 +36,7 @@ public class SearchService implements ISearchService {
     public Flux<UserInfo> getLinkedUsers(String username, LinkedUsersFilter filter) {
         List<IBaseSearchService<?, ?>> services = searchServiceFactory.getServicesFilteredByStartNodeSearchType(filter.getStartNodeType());
 
-        services = services.stream().filter(item -> filter.getSourceTypes().contains(item.getSearchType())).toList();
+        services = services.stream().filter(item -> filter.getSourceTypes().contains(item.getSourceType())).toList();
 
         return Flux.fromIterable(services).flatMap(item -> {
             if (SearchType.QUICK.equals(filter.getSearchType())) {

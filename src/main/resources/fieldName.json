@@ -1,0 +1,15 @@
+{
+  "username": "Username",
+  "location": "Location",
+  "verified": "Verified",
+  "followersCount": "Followers count",
+  "listedCount": "Listened count",
+  "followingCount": "Following count",
+  "tweetCount": "Tweet count",
+  "videoCount": "Videos count",
+  "commentCount": "Comments count",
+  "viewCount": "ViewCount",
+  "subscriberCount": "Subscriber count",
+  "hiddenSubscriberCount": "Hidden subscriber count",
+  "topicCategories": "Topic categories"
+}

@@ -4,7 +4,7 @@ public enum SourceType {
 
     TELEGRAM,
     INSTAGRAM,
-    TWITTER,
+    X,
     YOUTUBE
 
 }

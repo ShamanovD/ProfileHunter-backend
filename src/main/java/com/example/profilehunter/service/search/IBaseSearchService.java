@@ -28,6 +28,6 @@ public interface IBaseSearchService<T, R> {
 
     Function<R, UserFullInfo> mapUserWithFullInfo();
 
-    SourceType getSearchType();
+    SourceType getSourceType();
 
 }

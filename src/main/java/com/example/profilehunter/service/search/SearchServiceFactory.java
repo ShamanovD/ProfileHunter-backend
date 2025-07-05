@@ -14,7 +14,7 @@ public class SearchServiceFactory {
     private final Map<SourceType, IBaseSearchService<?, ?>> searchServiceMap;
 
     public SearchServiceFactory(List<IBaseSearchService<?, ?>> searchServices) {
-        this.searchServiceMap = searchServices.stream().collect(Collectors.toMap(IBaseSearchService::getSearchType, item -> item));
+        this.searchServiceMap = searchServices.stream().collect(Collectors.toMap(IBaseSearchService::getSourceType, item -> item));
     }
 
     public IBaseSearchService<?, ?> getSearchServiceBySearchType(SourceType sourceType) {
