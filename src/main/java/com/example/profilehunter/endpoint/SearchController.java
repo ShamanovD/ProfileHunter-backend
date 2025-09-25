@@ -5,6 +5,7 @@ import com.example.profilehunter.model.dto.UserFullInfo;
 import com.example.profilehunter.model.dto.UserInfo;
 import com.example.profilehunter.model.filter.LinkedUsersFilter;
 import com.example.profilehunter.service.search.ISearchService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -19,16 +20,19 @@ public class SearchController {
     private final ISearchService searchService;
 
     @GetMapping("start")
+    @SecurityRequirement(name = "bearerAuth")
     public Mono<UserInfo> getStartUserInfo(@RequestParam String username, @RequestParam SourceType type) {
         return searchService.getStartUserNodeByUsername(username, type);
     }
 
     @PostMapping("linked")
+    @SecurityRequirement(name = "bearerAuth")
     public Flux<UserInfo> getLinkedUsers(@RequestParam String username, @RequestBody LinkedUsersFilter filter) {
         return searchService.getLinkedUsers(username, filter);
     }
 
     @GetMapping("info/full")
+    @SecurityRequirement(name = "bearerAuth")
     public Mono<UserFullInfo> getUserFullInfo(@RequestParam String username, @RequestParam SourceType type) {
         return searchService.getUserFullInfo(username, type);
     }

@@ -5,6 +5,7 @@ public enum SourceType {
     TELEGRAM,
     INSTAGRAM,
     X,
-    YOUTUBE
+    YOUTUBE,
+    TIK_TOK
 
 }

@@ -25,14 +25,9 @@ public abstract class TwitterInfoMapper extends BaseUserInfoMapper<User, User> {
     @Mapping(target = "image", source = "profileImageUrl")
     @Mapping(target = "sourceType", expression = "java(getSourceType())")
     @Mapping(target = "metaInfoMap", source = ".", qualifiedByName = "mapMetaInfo")
-    @Mapping(target = "profilePhotos", expression = "java(List.of(user.getProfileImageUrl().toString()))")
+    @Mapping(target = "profilePhotos", source = ".", qualifiedByName = "getProfileImageUrls")
     @Mapping(target = "id", ignore = true)
     public abstract UserFullInfo mapUserWithFullInfo(User user);
-
-//    @Override
-//    public String getUrl() {
-//        return "https://x.com/";
-//    }
 
     @Override
     public SourceType getSourceType() {
@@ -53,5 +48,14 @@ public abstract class TwitterInfoMapper extends BaseUserInfoMapper<User, User> {
         }
 
         return metaInfoMap;
+    }
+
+    @Named("getProfileImageUrls")
+    public List<String> getImages(User user) {
+        if (Objects.nonNull(user.getProfileImageUrl())) {
+            return List.of(user.getProfileImageUrl().toString());
+        }
+
+        return List.of();
     }
 }
